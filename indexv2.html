@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome to JobPortal</title>
+    <style>
+        :root {
+            --primary-color: #6a11cb;
+            --secondary-color: #2575fc;
+            --background-color: #f4f7f6;
+            --text-color: #333;
+            --card-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: linear-gradient(to bottom right, var(--primary-color), var(--secondary-color));
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0;
+        }
+
+        .portal-card {
+            background: white;
+            width: 400px;
+            border-radius: 15px;
+            box-shadow: var(--card-shadow);
+            overflow: hidden;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        .tabs {
+            display: flex;
+            background-color: #f0f0f0;
+        }
+
+        .tab-button {
+            flex: 1;
+            padding: 1rem;
+            background: none;
+            border: none;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            color: #888;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .tab-button.active {
+            background-color: white;
+            color: var(--primary-color);
+        }
+
+        .form-content {
+            padding: 2rem;
+        }
+
+        .form-section {
+            display: none;
+        }
+
+        .form-section.active {
+            display: block;
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 2rem;
+            color: var(--text-color);
+        }
+
+        .input-group {
+            margin-bottom: 1.2rem;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 0.8rem;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            font-size: 1rem;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 5px rgba(106, 17, 203, 0.5);
+        }
+
+        .btn {
+            width: 100%;
+            padding: 0.9rem;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s;
+        }
+
+        .btn:hover {
+            background-color: #5710a2;
+            transform: translateY(-2px);
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="portal-card">
+    <div class="tabs">
+        <button class="tab-button active" onclick="showForm('login')">Login</button>
+        <button class="tab-button" onclick="showForm('signup')">Sign Up</button>
+    </div>
+
+    <div class="form-content">
+        <div class="form-section active" id="loginForm">
+            <h2>Welcome Back!</h2>
+            <div class="input-group">
+                <input id="loginUsername" placeholder="Username" />
+            </div>
+            <div class="input-group">
+                <input id="loginPassword" type="password" placeholder="Password" />
+            </div>
+            <button class="btn" onclick="login()">Login</button>
+        </div>
+
+        <div class="form-section" id="signupForm">
+            <h2>Create Account</h2>
+            <div class="input-group">
+                <input id="signupUsername" placeholder="Username" />
+            </div>
+            <div class="input-group">
+                <input id="signupPassword" type="password" placeholder="Password" />
+            </div>
+            <div class="input-group">
+                <input id="signupName" placeholder="Full Name" />
+            </div>
+            <div class="input-group">
+                <input id="signupEmail" placeholder="Email" />
+            </div>
+            <div class="input-group">
+                <select id="signupUserType">
+                    <option value="" disabled selected>Select User Type</option>
+                    <option value="jobseeker">Job Seeker</option>
+                    <option value="employer">Employer</option>
+                </select>
+            </div>
+            <button class="btn" onclick="signup()">Sign Up</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    function showForm(formName) {
+        const loginForm = document.getElementById('loginForm');
+        const signupForm = document.getElementById('signupForm');
+        const tabButtons = document.querySelectorAll('.tab-button');
+
+        if (formName === 'login') {
+            loginForm.classList.add('active');
+            signupForm.classList.remove('active');
+            tabButtons[0].classList.add('active');
+            tabButtons[1].classList.remove('active');
+        } else {
+            loginForm.classList.remove('active');
+            signupForm.classList.add('active');
+            tabButtons[0].classList.remove('active');
+            tabButtons[1].classList.add('active');
+        }
+    }
+
+    async function login() {
+        // Your login logic here
+        alert("Login button clicked!");
+    }
+
+    async function signup() {
+        // Your signup logic here
+        alert("Signup button clicked!");
+    }
+</script>
+
+</body>
+</html>

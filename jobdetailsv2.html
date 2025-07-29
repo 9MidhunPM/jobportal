@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Job Details</title>
+  <style>
+    /* --- CSS Variables for Easy Theming --- */
+    :root {
+      --primary-color: #6a11cb;
+      --primary-color-dark: #5710a2;
+      --secondary-color: #2575fc;
+      --text-color: #333;
+      --text-color-light: #666;
+      --background-light: #f7f8fc;
+      --white-color: #fff;
+      --border-color: #e0e0e0;
+      --card-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+      --border-radius: 12px;
+    }
+
+    /* --- General Body and Layout Styles --- */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: var(--background-light);
+      color: var(--text-color);
+    }
+
+    .page-container {
+      max-width: 1100px;
+      margin: 2rem auto;
+      padding: 0 2rem;
+      animation: fadeIn 0.5s ease-out;
+    }
+
+    .back-link {
+        display: inline-block;
+        margin-bottom: 1.5rem;
+        color: var(--primary-color);
+        text-decoration: none;
+        font-weight: bold;
+    }
+    .back-link:hover {
+        text-decoration: underline;
+    }
+
+    .job-details-layout {
+      display: flex;
+      gap: 2rem;
+      align-items: flex-start;
+    }
+
+    /* --- Main Job Content (Left Column) --- */
+    .job-main-content {
+      flex: 2;
+      background: var(--white-color);
+      border-radius: var(--border-radius);
+      box-shadow: var(--card-shadow);
+      overflow: hidden; /* To keep banner inside rounded corners */
+    }
+    
+    .job-banner {
+        height: 200px;
+        background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 1rem;
+    }
+    
+    .job-banner img {
+        height: 100px;
+        width: auto;
+        max-width: 250px;
+        filter: brightness(0) invert(1);
+    }
+
+    .job-header {
+      padding: 2rem;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .job-header h1 {
+      font-size: 2.25rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .job-header .company-name {
+      font-size: 1.25rem;
+      color: var(--text-color-light);
+      font-weight: 500;
+    }
+
+    .job-body {
+      padding: 2rem;
+    }
+
+    .job-section {
+      margin-bottom: 2rem;
+    }
+
+    .job-section h2 {
+      font-size: 1.5rem;
+      margin-bottom: 1rem;
+      border-bottom: 2px solid var(--primary-color);
+      padding-bottom: 0.5rem;
+      display: inline-block;
+    }
+
+    .job-section p, .job-section ul {
+      line-height: 1.6;
+      color: var(--text-color-light);
+    }
+    
+    .job-section ul {
+        padding-left: 1.5rem;
+    }
+    
+    .job-section li {
+        margin-bottom: 0.5rem;
+    }
+
+    /* --- Sidebar (Right Column) --- */
+    .job-sidebar {
+      flex: 1;
+      position: sticky;
+      top: 2rem;
+    }
+
+    .summary-card {
+      background: var(--white-color);
+      padding: 1.5rem;
+      border-radius: var(--border-radius);
+      box-shadow: var(--card-shadow);
+      border: 1px solid var(--border-color);
+    }
+
+    .summary-card .btn {
+      width: 100%;
+      padding: 1rem;
+      font-size: 1.1rem;
+      margin-bottom: 1rem;
+    }
+    
+    .summary-item {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        margin-bottom: 1rem;
+        font-size: 0.95rem;
+    }
+    
+    .summary-item strong {
+        font-weight: 600;
+        color: var(--text-color);
+    }
+    
+    .summary-item span {
+        color: var(--text-color-light);
+    }
+
+    .btn {
+      display: inline-block;
+      padding: 0.8rem 1.5rem;
+      background-color: var(--primary-color);
+      color: var(--white-color);
+      border: none;
+      border-radius: 8px;
+      font-weight: bold;
+      cursor: pointer;
+      text-decoration: none;
+      text-align: center;
+      transition: background-color 0.3s, transform 0.2s;
+    }
+
+    .btn:hover {
+      background-color: var(--primary-color-dark);
+      transform: translateY(-2px);
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+
+<div class="page-container" id="job-details-container">
+  <!-- Content will be dynamically generated here -->
+  <p>Loading job details...</p>
+</div>
+
+<script>
+  // --- MOCK DATABASE ---
+  // In a real application, you would fetch this data from an API
+  const jobsData = {
+    1: {
+      title: 'Senior React Developer',
+      company: 'Tech Solutions Inc.',
+      logoUrl: 'https://placehold.co/250x100/ffffff/000000?text=Tech+Solutions',
+      location: 'Remote',
+      type: 'Full-time',
+      salary: '₹25,00,000 - ₹35,00,000 PA',
+      posted: '5 days ago',
+      description: 'We are seeking an experienced Senior React Developer to join our dynamic team. You will be responsible for developing and implementing user interface components using React.js concepts and workflows such as Redux, Flux, and Webpack.',
+      responsibilities: [
+        'Developing new user-facing features using React.js.',
+        'Building reusable components and front-end libraries for future use.',
+        'Translating designs and wireframes into high-quality code.',
+        'Optimizing components for maximum performance across a vast array of web-capable devices and browsers.'
+      ],
+      qualifications: [
+        '5+ years of experience with React.js and its core principles.',
+        'Strong proficiency in JavaScript, including DOM manipulation and the JavaScript object model.',
+        'Experience with popular React.js workflows (such as Flux or Redux).',
+        'Familiarity with newer specifications of EcmaScript.',
+        'Knowledge of modern authorization mechanisms, such as JSON Web Token.'
+      ]
+    },
+    2: {
+      title: 'Node.js Backend Engineer',
+      company: 'Data Systems',
+      logoUrl: 'https://placehold.co/250x100/ffffff/000000?text=Data+Systems',
+      location: 'Bengaluru',
+      type: 'Full-time',
+      salary: '₹18,00,000 - ₹24,00,000 PA',
+      posted: '2 days ago',
+      description: 'Data Systems is looking for a skilled Node.js Backend Engineer to develop and maintain our server-side applications. You will work with our team of talented engineers to design and build the next generation of our data platform.',
+      responsibilities: [
+        'Design and implement low-latency, high-availability, and performant applications.',
+        'Write reusable, testable, and efficient code.',
+        'Integration of user-facing elements developed by front-end developers with server-side logic.',
+        'Implementation of security and data protection.'
+      ],
+      qualifications: [
+        '3+ years of experience in building scalable backend services with Node.js.',
+        'Strong understanding of asynchronous programming and its quirks and workarounds.',
+        'Experience with RESTful APIs and microservices architecture.',
+        'Proficiency with database technologies like PostgreSQL, MongoDB, and Redis.',
+        'Familiarity with cloud platforms like AWS or Google Cloud.'
+      ]
+    },
+    3: {
+      title: 'Digital Marketing Manager',
+      company: 'MarketPro Agency',
+      logoUrl: 'https://placehold.co/250x100/ffffff/000000?text=MarketPro',
+      location: 'Mumbai',
+      type: 'Hybrid',
+      salary: '₹12,00,000 - ₹16,00,000 PA',
+      posted: '1 week ago',
+      description: 'Join our award-winning agency as a Digital Marketing Manager. You will lead our marketing campaigns, manage our social media presence, and drive our SEO/SEM efforts to increase brand awareness and lead generation.',
+      responsibilities: [
+        'Develop and execute all digital marketing, including SEO/SEM, marketing database, email, social media and display advertising campaigns.',
+        'Measure and report performance of all digital marketing campaigns, and assess against goals (ROI and KPIs).',
+        'Identify trends and insights, and optimize spend and performance based on the insights.',
+        'Collaborate with internal teams to create landing pages and optimize user experience.'
+      ],
+      qualifications: [
+        'Proven working experience in digital marketing for 4+ years.',
+        'Demonstrable experience leading and managing SEO/SEM, marketing database, email, social media and/or display advertising campaigns.',
+        'Highly creative with experience in identifying target audiences and devising digital campaigns that engage, inform and motivate.',
+        'Solid knowledge of website analytics tools (e.g., Google Analytics, NetInsight, WebTrends).',
+        'Experience in setting up and optimizing Google Adwords campaigns.'
+      ]
+    },
+    4: {
+      title: 'Lead Product Designer (UI/UX)',
+      company: 'Innovate Co.',
+      logoUrl: 'https://placehold.co/250x100/ffffff/000000?text=Innovate+Co',
+      location: 'Pune',
+      type: 'Full-time',
+      salary: '₹28,00,000 - ₹40,00,000 PA',
+      posted: '12 days ago',
+      description: 'Innovate Co. is looking for a visionary Lead Product Designer to own the user experience and interface design for our flagship products. You will guide the design process from concept to launch, working closely with product managers and engineers.',
+      responsibilities: [
+        'Lead the design of new features and products, ensuring a consistent and intuitive user experience.',
+        'Create wireframes, storyboards, user flows, process flows and site maps to effectively communicate interaction and design ideas.',
+        'Conduct user research and evaluate user feedback to enhance the product.',
+        'Establish and promote design guidelines, best practices and standards.'
+      ],
+      qualifications: [
+        '7+ years of UI/UX design experience for digital products.',
+        'A strong portfolio of mobile and web-based projects.',
+        'Proficiency in Figma, Sketch, or other visual design and wire-framing tools.',
+        'Excellent visual design skills with a sensitivity to user-system interaction.',
+        'Ability to solve problems creatively and effectively.'
+      ]
+    }
+  };
+
+  // --- DYNAMIC CONTENT RENDERING ---
+  document.addEventListener('DOMContentLoaded', () => {
+    const container = document.getElementById('job-details-container');
+    
+    // Get job ID from URL query parameter (e.g., ?id=1)
+    const urlParams = new URLSearchParams(window.location.search);
+    let jobId = urlParams.get('id');
+    
+    // **FIX:** If no ID is found in the URL, default to '1' for demonstration.
+    if (!jobId) {
+        jobId = '1';
+    }
+
+    const job = jobsData[jobId];
+
+    // If the ID is invalid (e.g., ?id=99), show the "not found" message.
+    if (!job) {
+      container.innerHTML = '<h1>Job not found</h1><p>The job you are looking for does not exist or may have been removed.</p><a href="jobseeker.html" class="back-link">← Back to Search</a>';
+      return;
+    }
+
+    // Use the job data to build the HTML for the page
+    container.innerHTML = `
+      <a href="#" onclick="history.back(); return false;" class="back-link">← Back to Search Results</a>
+      <div class="job-details-layout">
+        
+        <!-- Left Column: Main Content -->
+        <main class="job-main-content">
+          <div class="job-banner">
+             <img src="${job.logoUrl}" alt="${job.company} Logo" onerror="this.style.display='none'">
+          </div>
+          <header class="job-header">
+            <h1>${job.title}</h1>
+            <p class="company-name">${job.company}</p>
+          </header>
+          <div class="job-body">
+            <section class="job-section">
+              <h2>Job Description</h2>
+              <p>${job.description}</p>
+            </section>
+            <section class="job-section">
+              <h2>Key Responsibilities</h2>
+              <ul>
+                ${job.responsibilities.map(item => `<li>${item}</li>`).join('')}
+              </ul>
+            </section>
+            <section class="job-section">
+              <h2>Qualifications</h2>
+              <ul>
+                ${job.qualifications.map(item => `<li>${item}</li>`).join('')}
+              </ul>
+            </section>
+          </div>
+        </main>
+
+        <!-- Right Column: Sidebar -->
+        <aside class="job-sidebar">
+          <div class="summary-card">
+            <a href="#" class="btn">Apply Now</a>
+            <div class="summary-item">
+              <strong>Salary:</strong>
+              <span>${job.salary}</span>
+            </div>
+            <div class="summary-item">
+              <strong>Location:</strong>
+              <span>${job.location}</span>
+            </div>
+            <div class="summary-item">
+              <strong>Job Type:</strong>
+              <span>${job.type}</span>
+            </div>
+            <div class="summary-item">
+              <strong>Posted:</strong>
+              <span>${job.posted}</span>
+            </div>
+          </div>
+        </aside>
+
+      </div>
+    `;
+  });
+</script>
+
+</body>
+</html>

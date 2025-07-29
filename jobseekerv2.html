@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Job Seeker Dashboard</title>
+  <style>
+    /* --- CSS Variables for Easy Theming --- */
+    :root {
+      --primary-color: #6a11cb;
+      --primary-color-dark: #5710a2;
+      --secondary-color: #2575fc;
+      --text-color: #333;
+      --text-color-light: #666;
+      --background-light: #f7f8fc;
+      --white-color: #fff;
+      --border-color: #e0e0e0;
+      --card-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+      --border-radius: 12px;
+    }
+
+    /* --- General Body and Layout Styles --- */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: var(--background-light);
+      color: var(--text-color);
+    }
+
+    .dashboard-wrapper {
+      display: flex;
+      min-height: 100vh;
+    }
+
+    /* --- Sidebar Navigation --- */
+    .sidebar {
+      width: 260px;
+      background: var(--white-color);
+      padding: 2rem 1.5rem;
+      border-right: 1px solid var(--border-color);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .sidebar-header {
+      margin-bottom: 2rem;
+    }
+
+    .sidebar-header h2 {
+      color: var(--primary-color);
+      font-size: 1.5rem;
+      text-align: center;
+    }
+
+    .profile-summary {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .profile-summary .avatar {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background-color: var(--primary-color);
+      color: var(--white-color);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 1rem;
+      font-size: 2rem;
+      font-weight: bold;
+    }
+
+    .profile-summary h3 {
+      font-size: 1.1rem;
+      margin-bottom: 0.25rem;
+    }
+
+    .profile-summary p {
+      color: var(--text-color-light);
+      font-size: 0.9rem;
+    }
+    
+    .sidebar-nav a {
+      display: block;
+      padding: 1rem;
+      color: var(--text-color-light);
+      text-decoration: none;
+      border-radius: 8px;
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+      transition: background-color 0.3s, color 0.3s;
+    }
+
+    .sidebar-nav a:hover {
+      background-color: var(--background-light);
+      color: var(--primary-color);
+    }
+
+    .sidebar-nav a.active {
+      background-color: var(--primary-color);
+      color: var(--white-color);
+      font-weight: bold;
+    }
+    
+    .sidebar-footer {
+        margin-top: auto;
+    }
+
+
+    /* --- Main Content Area --- */
+    .main-content {
+      flex: 1;
+      padding: 2rem 3rem;
+      overflow-y: auto;
+    }
+
+    .content-header {
+        margin-bottom: 2rem;
+    }
+
+    .content-header h1 {
+        font-size: 2rem;
+    }
+
+    #search-bar {
+      width: 100%;
+      padding: 1rem;
+      border-radius: 8px;
+      border: 1px solid var(--border-color);
+      font-size: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    /* --- Job Card Styles --- */
+    .job-card {
+      background: var(--white-color);
+      padding: 1.5rem;
+      border-radius: var(--border-radius);
+      margin-bottom: 1.5rem;
+      box-shadow: var(--card-shadow);
+      transition: transform 0.2s, box-shadow 0.2s;
+      border: 1px solid var(--border-color);
+    }
+
+    .job-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 12px 30px rgba(0,0,0,0.12);
+    }
+    
+    .job-card-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 1rem;
+    }
+    
+    .job-card-header h3 {
+        font-size: 1.25rem;
+    }
+    
+    .job-card-header .company {
+        color: var(--text-color-light);
+        font-size: 1rem;
+    }
+
+    .job-tags {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .tag {
+      background-color: var(--background-light);
+      color: var(--text-color-light);
+      padding: 0.25rem 0.75rem;
+      border-radius: 15px;
+      font-size: 0.8rem;
+      font-weight: 500;
+    }
+    
+    .job-card-footer {
+        display: flex;
+        gap: 1rem;
+    }
+
+    /* --- Button and Modal Styles (Reused & Refined) --- */
+    .btn {
+      display: inline-block;
+      padding: 0.8rem 1.5rem;
+      background-color: var(--primary-color);
+      color: var(--white-color);
+      border: none;
+      border-radius: 8px;
+      font-weight: bold;
+      cursor: pointer;
+      text-decoration: none;
+      text-align: center;
+      transition: background-color 0.3s, transform 0.2s;
+    }
+
+    .btn:hover {
+      background-color: var(--primary-color-dark);
+      transform: translateY(-2px);
+    }
+
+    .btn-secondary {
+      background-color: var(--background-light);
+      border: 1px solid var(--border-color);
+      color: var(--text-color);
+    }
+    .btn-secondary:hover {
+      background-color: #e9e9e9;
+    }
+
+    /* --- Modal styles are identical to employer.html for consistency --- */
+    .modal { /* ... Add modal styles from employer.html ... */ }
+    .overlay { /* ... Add overlay styles from employer.html ... */ }
+  </style>
+</head>
+<body>
+
+<div class="dashboard-wrapper">
+  
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <h2>JobSeeker</h2>
+    </div>
+
+    <div class="profile-summary">
+      <div class="avatar" id="avatar-initials">JS</div>
+      <h3 id="profile-name">John Smith</h3>
+      <p id="profile-title">Frontend Developer</p>
+    </div>
+
+    <nav class="sidebar-nav">
+      <a href="#" id="nav-job-search" class="active" onclick="showView('job-search')">Job Search</a>
+      <a href="#" id="nav-saved-jobs" onclick="showView('saved-jobs')">Saved Jobs</a>
+      <a href="#" id="nav-applications" onclick="showView('applications')">Application History</a>
+    </nav>
+
+    <div class="sidebar-footer">
+        <a href="#" class="btn btn-secondary" style="width: 100%;" onclick="toggleModal()">Edit Profile</a>
+    </div>
+  </aside>
+
+  <main class="main-content" id="main-content-area">
+    </main>
+
+</div>
+
+<script>
+  // --- MOCK DATA ---
+  // In a real app, this would come from a server
+  const userProfile = {
+    name: "John Smith",
+    title: "Frontend Developer",
+    initials: "JS"
+  };
+
+  let allJobs = [
+    { id: 1, title: 'Senior React Developer', company: 'Tech Solutions Inc.', location: 'Remote', type: 'Full-time' },
+    { id: 2, title: 'Node.js Backend Engineer', company: 'Data Systems', location: 'Bengaluru', type: 'Full-time' },
+    { id: 3, title: 'UI/UX Designer', company: 'Creative Minds', location: 'Hybrid', type: 'Contract' },
+    { id: 4, title: 'DevOps Engineer', company: 'CloudWorks', location: 'Remote', type: 'Full-time' },
+    { id: 5, title: 'Product Manager', company: 'Innovate Co.', location: 'Mumbai', type: 'Full-time' },
+  ];
+  
+  let savedJobs = [ allJobs[1] ]; // Let's pretend one job is already saved
+  let applications = [ { ...allJobs[4], status: 'Under Review' } ]; // And one is applied for
+
+  // --- DOM References ---
+  const mainContent = document.getElementById('main-content-area');
+  const navLinks = document.querySelectorAll('.sidebar-nav a');
+
+  // --- RENDERING FUNCTIONS ---
+  // A helper function to create a single job card element
+  function createJobCard(job, context = 'search') {
+    const card = document.createElement('div');
+    card.className = 'job-card';
+    card.innerHTML = `
+      <div class="job-card-header">
+        <div>
+          <h3>${job.title}</h3>
+          <p class="company">${job.company}</p>
+        </div>
+      </div>
+      <div class="job-tags">
+        <span class="tag">📍 ${job.location}</span>
+        <span class="tag">🕒 ${job.type}</span>
+        ${job.status ? `<span class="tag" style="background-color: #e0f2fe; color: #0ea5e9;">${job.status}</span>` : ''}
+      </div>
+      <div class="job-card-footer">
+        <a href="#" class="btn">View Details</a>
+        ${context === 'search' ? `<a href="#" class="btn btn-secondary" onclick="saveJob(${job.id})">Save</a>` : ''}
+      </div>
+    `;
+    return card;
+  }
+
+  // Renders the Job Search view
+  function renderJobSearchView(jobsToRender = allJobs) {
+    mainContent.innerHTML = `
+      <div class="content-header">
+        <h1>Find Your Next Opportunity</h1>
+      </div>
+      <input type="text" id="search-bar" placeholder="Search by title, company, or keyword..." oninput="filterJobs(event)">
+      <div id="job-listings"></div>
+    `;
+    const listingsContainer = document.getElementById('job-listings');
+    if (jobsToRender.length === 0) {
+        listingsContainer.innerHTML = "<p>No jobs match your search.</p>";
+        return;
+    }
+    jobsToRender.forEach(job => listingsContainer.appendChild(createJobCard(job, 'search')));
+  }
+
+  // Renders the Saved Jobs view
+  function renderSavedJobsView() {
+    mainContent.innerHTML = `
+      <div class="content-header">
+        <h1>Saved Jobs</h1>
+      </div>
+      <div id="saved-jobs-listings"></div>
+    `;
+    const listingsContainer = document.getElementById('saved-jobs-listings');
+    if (savedJobs.length === 0) {
+        listingsContainer.innerHTML = "<p>You have not saved any jobs yet.</p>";
+        return;
+    }
+    savedJobs.forEach(job => listingsContainer.appendChild(createJobCard(job, 'saved')));
+  }
+
+  // Renders the Application History view
+  function renderApplicationsView() {
+    mainContent.innerHTML = `
+      <div class="content-header">
+        <h1>Application History</h1>
+      </div>
+      <div id="application-listings"></div>
+    `;
+    const listingsContainer = document.getElementById('application-listings');
+     if (applications.length === 0) {
+        listingsContainer.innerHTML = "<p>You have not applied to any jobs yet.</p>";
+        return;
+    }
+    applications.forEach(job => listingsContainer.appendChild(createJobCard(job, 'applied')));
+  }
+
+  // --- LOGIC & EVENT HANDLERS ---
+  
+  function filterJobs(event) {
+    const searchTerm = event.target.value.toLowerCase();
+    const filtered = allJobs.filter(job => 
+        job.title.toLowerCase().includes(searchTerm) ||
+        job.company.toLowerCase().includes(searchTerm) ||
+        job.location.toLowerCase().includes(searchTerm)
+    );
+    renderJobSearchView(filtered);
+  }
+  
+  function saveJob(jobId) {
+    event.preventDefault();
+    const jobToSave = allJobs.find(job => job.id === jobId);
+    // Prevent duplicates
+    if (jobToSave && !savedJobs.some(job => job.id === jobId)) {
+        savedJobs.unshift(jobToSave);
+        alert(`'${jobToSave.title}' has been saved!`);
+        // If we're currently viewing the saved jobs, re-render it
+        if (document.getElementById('nav-saved-jobs').classList.contains('active')) {
+            renderSavedJobsView();
+        }
+    } else {
+        alert('Job is already saved!');
+    }
+  }
+
+  function showView(viewName) {
+    event.preventDefault();
+    navLinks.forEach(link => link.classList.remove('active'));
+    document.getElementById(`nav-${viewName}`).classList.add('active');
+
+    if (viewName === 'job-search') {
+      renderJobSearchView();
+    } else if (viewName === 'saved-jobs') {
+      renderSavedJobsView();
+    } else if (viewName === 'applications') {
+      renderApplicationsView();
+    }
+  }
+
+  function initializeDashboard() {
+    // Set profile info
+    document.getElementById('avatar-initials').textContent = userProfile.initials;
+    document.getElementById('profile-name').textContent = userProfile.name;
+    document.getElementById('profile-title').textContent = userProfile.title;
+    // Load the default view
+    renderJobSearchView();
+  }
+
+  // --- INITIALIZATION ---
+  document.addEventListener("DOMContentLoaded", initializeDashboard);
+  
+  // You would need to add your modal toggle logic here
+  // function toggleModal() { ... }
+
+</script>
+
+</body>
+</html>
