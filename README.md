@@ -38,3 +38,4 @@ GitHub links above open the source files, not a hosted demo. To preview a page, 
 - Each page owns its sample data; IDs and job descriptions are not consistent across all pages.
 - CSS and JavaScript are inline. No external script or stylesheet CDN is required. The detailed job page requests optional placeholder logos from `placehold.co`; those images need internet access and hide on load failure.
 
+See [Getting started](docs/GETTING_STARTED.md) for page URLs and troubleshooting, and the [Feature guide](docs/FEATURE_GUIDE.md) for a demo walkthrough, code map, and known limitations.
